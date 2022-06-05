@@ -10,6 +10,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Container from "@material-ui/core/Container";
+import { Link } from 'react-router-dom';
+
 const styles = () => ({
     "@global": {
         body: {
@@ -88,6 +90,8 @@ class Login extends Component {
                                 Incorrect email or password.
                             </Typography>
                         )}
+                        <br>
+                        </br>
                         <Button
                             type="button"
                             fullWidth
@@ -98,6 +102,20 @@ class Login extends Component {
                         >
                             Sign In
                         </Button>
+                        <br>
+                        </br>
+                        <Link to="/register">
+                            <Button
+                                type="button"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                            >
+                                <div class="text-center">
+                                    Tidak Punya Akun? Masuk Ke Halaman Register
+                                </div> </Button>
+                        </Link>
+
                     </Paper>
                 </Container>
             );
