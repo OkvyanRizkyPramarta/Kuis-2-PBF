@@ -1,131 +1,67 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
-import { loginUser } from "../actions/auth";
-import { withStyles } from "@material-ui/styles";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import Container from "@material-ui/core/Container";
 import { Link } from 'react-router-dom';
+import firebaseConfig from "../firebase/firebase";
 
-const styles = () => ({
-    "@global": {
-        body: {
-            backgroundColor: "#fff"
+const Register = () => {
+    const [currentUser, setCurrentUser] = useState(null);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const { email, password } = e.target.elements;
+        try {
+            firebaseConfig.auth().createUserWithEmailAndPassword(email.value, password.value);
+            setCurrentUser(true);
+        } catch (error) {
+            alert(error);
         }
-    },
-    paper: {
-        marginTop: 100,
-        display: "flex",
-        padding: 20,
-        flexDirection: "column",
-        alignItems: "center"
-    },
-    avatar: {
-        marginLeft: "auto",
-        marginRight: "auto",
-        backgroundColor: "#f50057"
-    },
-    form: {
-        marginTop: 1
-    },
-    errorText: {
-        color: "#f50057",
-        marginBottom: 5,
-        textAlign: "center"
+    };
+    if (currentUser) {
+        return <Redirect to="/" />;
     }
-});
-class Register extends Component {
-    state = { email: "", password: "" };
-    handleEmailChange = ({ target }) => {
-        this.setState({ email: target.value });
-    };
-    handlePasswordChange = ({ target }) => {
-        this.setState({ password: target.value });
-    };
-    handleSubmit = () => {
-        const { dispatch } = this.props;
-        const { email, password } = this.state;
-        dispatch(loginUser(email, password));
-    };
-    render() {
-        const { classes, loginError, isAuthenticated } = this.props;
-        if (isAuthenticated) {
-            return <Redirect to="/" />;
-        } else {
-            return (
-                <Container component="main" maxWidth="xs">
-                    <Paper className={classes.paper}>
-                        <Avatar className={classes.avatar}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Sign in
-                        </Typography>
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            onChange={this.handleEmailChange}
-                        />
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            onChange={this.handlePasswordChange}
-                        />
-                        {loginError && (
-                            <Typography component="p" className={classes.errorText}>
-                                Incorrect email or password.
-                            </Typography>
-                        )}
-                        <br>
-                        </br>
-                        <Button
-                            type="button"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.submit}
-                            onClick={this.handleSubmit}
-                        >
-                            Register
-                        </Button>
-                        <br>
-                        </br>
-                        <Link to="/login">
-                            <Button
-                                type="button"
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                            >
-                                <div class="text-center">
-                                    Sudah Punya Akun? Ingin Masuk Ke Halaman Login?
-                                </div> </Button>
-                        </Link>
-                    </Paper>
-                </Container>
-            );
-        }
-    }
+    return (
+        <div>
+            <div className="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6 col-lg-10 col-md-9">
+                        <div class="card shadow-sm my-5">
+                            <div class="card-body p-0">
+                                <div class="row">
+                                    <div className="col-lg-12">
+                                        <div className='card-body'>
+                                            <div class="text-center">
+                                                <h1 class="h4 text-gray-900 mb-4">Register</h1>
+                                            </div><br></br>
+                                            <form onSubmit={handleSubmit}>
+                                            <div class="form-group">
+                                                <label>Email</label>
+                                                <input type="text" class="form-control" id="email" name="email" 
+                                                    placeholder="Masukkan Email Baru Anda" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Password</label>
+                                                <input type="password" class="form-control" id="password" name="password"
+                                                    placeholder="Masukkan Password Baru Anda"  />
+                                            </div><br></br>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                                            </div><br></br>
+                                            <Link to='/login'>
+                                                <div class="text-center">
+                                                    <a class="font-weight-bold small" href="#">Kembali ke halaman login !!</a>
+                                                </div><br></br>
+                                                <div class="text-center">
+                                                </div>
+                                            </Link>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
-function mapStateToProps(state) {
-    return {
-        isLoggingIn: state.auth.isLoggingIn,
-        loginError: state.auth.loginError,
-        isAuthenticated: state.auth.isAuthenticated
-    };
-}
-export default withStyles(styles)(connect(mapStateToProps)(Register));
+export default Register;
